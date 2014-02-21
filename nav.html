@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">CUIC Sprint Task Board</a>
+      <a class="navbar-brand" href="#/">{{brand}}</a>
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <div class="nav navbar-nav btn-group">
@@ -13,15 +13,15 @@
         <ul class="dropdown-menu" role="menu">
           <li ng-repeat="team in teams"><a href="#/" ng-click="changeTeam(team.id)">{{team.name}}</a></li>
         </ul>
-      </div>
+      </div>     
       <form class="navbar-form navbar-left" role="search">
-        <div class="input-group">
+        <div class="form-group">
           <input type="text" class="form-control" placeholder="Search">
-          <a href="#" class="input-group-addon"><span class="glyphicon glyphicon-search"></a></span>
         </div>
+        <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
       </form>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-refresh"></span> Refresh</a></li>
+        <li><a href="#/"><span class="glyphicon glyphicon-refresh"></span> Refresh</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
