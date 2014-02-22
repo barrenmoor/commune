@@ -1,47 +1,22 @@
-angular.module('navig', ['ngRoute'])
+angular.module('navig', ['ngRoute', 'components'])
 
 .config(function($routeProvider) {
 	$routeProvider
 		.when('/', {
-			controller:'TeamCtrl',
-			templateUrl:'nav.html'
+			controller : 'MainCtrl',
+			templateUrl : 'main.html'
+		}).
+		when('/selectteam/:teamId', {
+			controller : 'TeamCtrl',
+			templateUrl : 'team.html'
 		});
 })
 
-.controller('TeamCtrl', function($scope, $http, $location, $routeParams){
-	$http.get('basic').success(function(data) {
-		$scope.brand = data.brand;
+.controller('MainCtrl', function($scope, $http, $location, $routeParams){
+})
 
-		$scope.teams = [{
-			id : "100",
-			name : "Evoque"
-		}, {
-			id : "101",
-			name : "Hummer"
-		}, {
-			id : "102",
-			name : "Range Rover"
-		}, {
-			id : "103",
-			name : "Snipers"
-		}, {
-			id : "104",
-			name : "Vipers"
-		},{
-			id: "105",
-			name : "Clueless"
-		}];
-
-		$scope.selectedTeam = "Select Team";
-
-		$scope.changeTeam = function(id) {
-			console.log(id);
-
-			for(var i in $scope.teams) {
-				if(id == $scope.teams[i].id) {
-					$scope.selectedTeam = $scope.teams[i].name;
-				}
-			}
-		};
+.controller('TeamCtrl', function($scope, $http, $routeParams) {
+	$http.get('teams/' + $routeParams.teamId).success(function(data) {
+		$scope.selectedTeam = data.name;
 	});
 });
