@@ -1,0 +1,33 @@
+<div class="navbarDiv">
+	<navbar selectedTeam="{{selectedTeam}}"/>
+</div>
+<div class="mainFrameDiv">
+	<table class="table table-striped table-bordered">
+		<tr>
+			<td class="cellInputFormLabel">Title</td>
+			<td class="cellInputFormData"><input type="text" class="form-control" ng-model="title" placeholder="Title"></td>
+		</tr>
+		<tr>
+			<td class="cellInputFormLabel">Sprint Days</td>
+			<td class="cellInputFormData"><div class="datePicker"></div></td>
+		</tr>
+	</table>
+	<div class="tableBottomDiv">
+		<button type="button" class="btn btn-primary" ng-click="save()"><span class="glyphicon glyphicon-ok"></span> Save</button>
+		<a href="#/team/{{teamId}}">
+			<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+		</a>
+	</div>
+</div>
+<script type="text/javascript">
+	angular.element('.datePicker').datepicker({
+		multidate: true
+	});
+	
+	angular.element('.datePicker').scope().$watch('sprintDays', function(newValue, oldValue){
+		if(newValue && angular.element('.datePicker').datepicker('getUTCDates').length == 0) {
+			var dates = angular.element('.datePicker').scope().sprintDays;
+			angular.element('.datePicker').datepicker('setUTCDates', dates);
+		}
+	});
+</script>

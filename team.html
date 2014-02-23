@@ -1,6 +1,53 @@
 <div class="navbarDiv">
-  <navbar selectedTeam={{selectedTeam}}/>
+	<navbar selectedTeam={{selectedTeam}}/>
 </div>
 <div class="mainFrameDiv">
-  <h1>{{selectedTeam}}'s Page. List all sprints of this team here.</h1>
+	<div class="panel panel-default">
+		<div class="panel-heading"><h4>Team {{selectedTeam}} - All Sprints</h4></div>
+		<div class="panel-body">
+			<p><b>Team Members:</b> <span ng-repeat="teamMember in teamMembers">{{teamMember.name}}{{$last ? '' : ', '}}</span></p><p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+		</div>
+	</div>
+	<table class="table table-striped table-hover">
+		<tr>
+			<th>#</th>
+			<th>Title</th>
+			<th>Start Date</th>
+			<th>End Date</th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr ng-repeat="sprint in sprints">
+			<td>{{$index + 1}}</td>
+			<td>{{sprint.name}}</td>
+			<td>{{sprint.startDate}}</td>
+			<td>{{sprint.endDate}}</td>
+			<td>
+				<a href="#/team/{{teamId}}/editsprint/{{sprint.id}}"><span class="glyphicon glyphicon-pencil rowActions"></span></a>
+				<span>&nbsp;&nbsp;</span>
+				<span class="glyphicon glyphicon-trash rowActions" data-toggle="modal" data-target="#warning" ng-click="confirmDelete(teamId, sprint.id)"></span>
+			</td>
+		</tr>
+	</table>
+	<div class="tableBottomDiv">
+		<a href="#/team/{{teamId}}/addsprint">
+			<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add</button>
+		</a>
+	</div>
+	<div id="warning" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title"><span class="glyphicon glyphicon-warning-sign"></span> Warning!</h4>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure you want to delete this sprint?</p>
+				</div>
+				<div class="modal-footer">
+					<button id="cancel" type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="delete()"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 </div>
