@@ -3,7 +3,30 @@
 }
 
 .mainFrameDiv {
-	width: 100%;
+	width: 80%;
 	padding-top: 100px;
-	text-align: center;
+	margin: 0 auto;
+}
+
+.tableBottomDiv {
+	text-align: right;
+}
+
+.rowActions {
+	opacity: 0.3;
+}
+
+.rowActions:hover {
+	opacity: 1.0;
+	cursor: pointer;
+}
+
+.cellInputFormLabel {
+	width: 40%;
+	font-weight: bold;
+	vertical-align: middle; /*For some reason, this doesn't work*/
+}
+
+.cellInputFormData {
+	width: 60%;
 }

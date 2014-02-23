@@ -18,7 +18,7 @@ angular.module('components', [])
 							'<span class="sr-only">Toggle Dropdown</span>' +
 						'</button>' +
 						'<ul class="dropdown-menu" role="menu">' +
-							'<li ng-repeat="team in teams"><a href="#/selectteam/{{team.id}}">{{team.name}}</a></li>' +
+							'<li ng-repeat="team in teams"><a href="#/team/{{team.id}}">{{team.name}}</a></li>' +
 						'</ul>' +
 					'</div>' +
 					'<form class="navbar-form navbar-left" role="search">' +
