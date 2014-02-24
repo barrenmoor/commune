@@ -8,7 +8,7 @@ angular.module('components', [])
 		template : '<nav class="navbar navbar-default navbar-fixed-top" role="navigation">' +
 			'<div class="container-fluid">' +
 				'<div class="navbar-header">' +
-				'<a class="navbar-brand" href="#/">{{brand}}</a>' +
+					'<span class="navbar-brand">{{brand}}</span>' +
 				'</div>' +
 				'<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">' +
 					'<div class="nav navbar-nav btn-group">' +
@@ -28,7 +28,7 @@ angular.module('components', [])
 						'<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>' +
 					'</form>' +
 					'<ul class="nav navbar-nav navbar-right">' +
-						'<li><a href="#/"><span class="glyphicon glyphicon-refresh"></span> Refresh</a></li>' +
+						'<li><a href="#/"><span class="glyphicon glyphicon-home"></span> Home</a></li>' +
 					'</ul>' +
 				'</div>' +
 			'</div>' +
