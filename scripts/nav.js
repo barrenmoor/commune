@@ -29,6 +29,7 @@ angular.module('navig', ['ngRoute', 'components'])
 	$http.get('teams/' + teamId).success(function(team) {
 		$scope.selectedTeam = team.name;
 		$scope.teamMembers = team.members;
+		$scope.desc = team.desc;
 		$scope.teamId = teamId;
 
 		$http.get('teams/' + teamId + '/sprints').success(function(teamSprints){
