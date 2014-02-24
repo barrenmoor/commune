@@ -40,13 +40,13 @@ var sprints = [{
 	id : "200",
 	name : "Sprint 102",
 	teamId : "104",
-	dates : [new Date(Date.UTC(2014, 1, 12)), new Date(Date.UTC(2014, 0, 31)), new Date(Date.UTC(2014, 1, 3)), new Date(Date.UTC(2014, 1, 4)), new Date(Date.UTC(2014, 1, 5)), new Date(Date.UTC(2014, 1, 6)),
-	new Date(Date.UTC(2014, 1, 7)), new Date(Date.UTC(2014, 1, 10)), new Date(Date.UTC(2014, 1, 11))]
+	dates : [new Date(Date.UTC(2014, 1, 12)).getTime(), new Date(Date.UTC(2014, 0, 31)).getTime(), new Date(Date.UTC(2014, 1, 3)).getTime(), new Date(Date.UTC(2014, 1, 4)).getTime(), new Date(Date.UTC(2014, 1, 5)).getTime(), new Date(Date.UTC(2014, 1, 6)).getTime(),
+	new Date(Date.UTC(2014, 1, 7)).getTime(), new Date(Date.UTC(2014, 1, 10)).getTime(), new Date(Date.UTC(2014, 1, 11)).getTime()]
 }, {
 	id : "201",
 	name : "Sprint 103",
 	teamId : "104",
-	dates : [new Date(Date.UTC(2014, 1, 19)), new Date(Date.UTC(2014, 1, 20)), new Date(Date.UTC(2014, 1, 21)), new Date(Date.UTC(2014, 1, 24)), new Date(Date.UTC(2014, 1, 25))]
+	dates : [new Date(Date.UTC(2014, 1, 19)).getTime(), new Date(Date.UTC(2014, 1, 20)).getTime(), new Date(Date.UTC(2014, 1, 21)).getTime(), new Date(Date.UTC(2014, 1, 24)).getTime(), new Date(Date.UTC(2014, 1, 25)).getTime()]
 }];
 
 exports.basic = function(req, res) {

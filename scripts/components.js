@@ -4,7 +4,7 @@ angular.module('components', [])
 	return {
 		restrict : 'E',
 		transclude : true,
-		scope : {selectedTeam : "@"},
+		scope : {selectedTeam : "@", href : "@"},
 		template : '<nav class="navbar navbar-default navbar-fixed-top" role="navigation">' +
 			'<div class="container-fluid">' +
 				'<div class="navbar-header">' +
@@ -12,7 +12,7 @@ angular.module('components', [])
 				'</div>' +
 				'<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">' +
 					'<div class="nav navbar-nav btn-group">' +
-						'<button type="button" class="btn btn-default navbar-btn">{{selectedTeam}}</button>' +
+						'<a href="{{href}}" class="btn btn-default navbar-btn">{{selectedTeam}}</a>' +
 						'<button type="button" class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown">' +
 							'<span class="caret"></span>' +
 							'<span class="sr-only">Toggle Dropdown</span>' +
@@ -40,6 +40,7 @@ angular.module('components', [])
 				$http.get('teams').success(function(teamSummary) {
 					$scope.teams = teamSummary.teams;
 					$scope.selectedTeam = $element.attr("selectedTeam");
+					$scope.href = $element.attr("href");
 				});
 			});
 		}

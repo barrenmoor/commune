@@ -1,4 +1,4 @@
-angular.module('navig', ['ngRoute', 'components'])
+angular.module('commune', ['ngRoute', 'components'])
 
 .config(function($routeProvider) {
 	$routeProvider
@@ -16,7 +16,11 @@ angular.module('navig', ['ngRoute', 'components'])
 		})
 		.when('/team/:teamId/editsprint/:sprintId', {
 			controller : 'EditSprintCtrl',
-			templateUrl : 'addeditsprint.html'			
+			templateUrl : 'addeditsprint.html'
+		})
+		.when('/team/:teamId/showsprint/:sprintId', {
+			controller : 'ShowSprintCtrl',
+			templateUrl : 'showsprint.html'			
 		});
 })
 
@@ -37,12 +41,14 @@ angular.module('navig', ['ngRoute', 'components'])
 			var sprints = [];
 
 			for(var i in teamSprints) {
-				teamSprints[i].dates.sort();
-				var numDays = teamSprints[i].dates.length;
-
 				var utils = new CommuneUtils();
-				var startDate = utils.formatDate(new Date(teamSprints[i].dates[0]));
-				var endDate = utils.formatDate(new Date(teamSprints[i].dates[numDays - 1]));
+				var sprintDays = utils.convertToDate(teamSprints[i].dates);
+
+				sprintDays.sort(utils.date_sort_asc);
+				var numDays = sprintDays.length;
+				
+				var startDate = utils.formatDate(new Date(sprintDays[0]));
+				var endDate = utils.formatDate(new Date(sprintDays[numDays - 1]));
 
 				sprints.push({
 					id : teamSprints[i].id,
@@ -106,14 +112,11 @@ angular.module('navig', ['ngRoute', 'components'])
 		$scope.teamId = teamId;
 
 		$http.get('teams/' + teamId + '/sprints/' + sprintId).success(function(sprint) {
+			var utils = new CommuneUtils();
 			$scope.title = sprint.name;
 
-			$scope.sprintDays = [];
-			for(var i in sprint.dates) {
-				$scope.sprintDays.push(new Date(sprint.dates[i]));
-			}
-
-			$scope.sprintDays.sort();
+			$scope.sprintDays = utils.convertToDate(sprint.dates);
+			$scope.sprintDays.sort(utils.date_sort_asc);
 
 			$scope.save = function() {
 				$scope.sprintDays = $('.datePicker').datepicker('getUTCDates');
@@ -130,6 +133,29 @@ angular.module('navig', ['ngRoute', 'components'])
 				});
 
 			};
+		});
+	});
+})
+
+.controller('ShowSprintCtrl', function($scope, $http, $routeParams) {
+	var teamId = $routeParams.teamId;
+	var sprintId = $routeParams.sprintId;
+
+	$http.get('teams/' + teamId).success(function(team) {
+		$scope.selectedTeam = team.name;
+		$scope.teamId = teamId;
+
+		$http.get('teams/' + teamId + '/sprints/' + sprintId).success(function(sprint) {
+			var utils = new CommuneUtils();
+
+			$scope.title = sprint.name;
+			$scope.sprintDays = utils.convertToDate(sprint.dates);
+			$scope.sprintDays.sort(utils.date_sort_asc);
+
+			var numDays = $scope.sprintDays.length;
+
+			$scope.startDate = utils.formatDate($scope.sprintDays[0]);
+			$scope.endDate = utils.formatDate($scope.sprintDays[numDays - 1]);
 		});
 	});
 });
