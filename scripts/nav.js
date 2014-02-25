@@ -27,7 +27,7 @@ angular.module('commune', ['ngRoute', 'components'])
 .controller('MainCtrl', function($scope, $http, $location, $routeParams){
 })
 
-.controller('TeamCtrl', function($scope, $http, $routeParams, $route) {
+.controller('TeamCtrl', function($scope, $http, $routeParams, $route, $location) {
 	var teamId = $routeParams.teamId;
 
 	$http.get('teams/' + teamId).success(function(team) {
@@ -47,8 +47,8 @@ angular.module('commune', ['ngRoute', 'components'])
 				sprintDays.sort(utils.date_sort_asc);
 				var numDays = sprintDays.length;
 				
-				var startDate = utils.formatDate(new Date(sprintDays[0]));
-				var endDate = utils.formatDate(new Date(sprintDays[numDays - 1]));
+				var startDate = utils.formatDateLong(new Date(sprintDays[0]));
+				var endDate = utils.formatDateLong(new Date(sprintDays[numDays - 1]));
 
 				sprints.push({
 					id : teamSprints[i].id,
@@ -75,6 +75,10 @@ angular.module('commune', ['ngRoute', 'components'])
 				$scope.delete.teamId = teamId;
 				$scope.delete.sprintId = sprintId;
 			};
+
+			$scope.edit = function(teamId, sprintId) {
+				$location.path('/team/' + teamId + '/editsprint/' + sprintId);
+			}
 		});
 	});
 })
@@ -142,20 +146,41 @@ angular.module('commune', ['ngRoute', 'components'])
 	var sprintId = $routeParams.sprintId;
 
 	$http.get('teams/' + teamId).success(function(team) {
-		$scope.selectedTeam = team.name;
-		$scope.teamId = teamId;
+		var showsprint = {};
+		$scope.showsprint = showsprint;
+
+		showsprint.selectedTeam = team.name,
+		showsprint.teamId = teamId
+		showsprint.members = team.members;
+		showsprint.statuses = ["New", "In Progress", "Completed", "Blocked", "Descoped"];
 
 		$http.get('teams/' + teamId + '/sprints/' + sprintId).success(function(sprint) {
 			var utils = new CommuneUtils();
 
-			$scope.title = sprint.name;
-			$scope.sprintDays = utils.convertToDate(sprint.dates);
-			$scope.sprintDays.sort(utils.date_sort_asc);
+			showsprint.title = sprint.name;
+			showsprint.sprintDays = utils.convertToDate(sprint.dates).sort(utils.date_sort_asc);
+			showsprint.startDate = utils.formatDateLong(showsprint.sprintDays[0]);
+			showsprint.endDate = utils.formatDateLong(showsprint.sprintDays[showsprint.sprintDays.length - 1]);
+			showsprint.sprintItems = utils.flattenStories(sprint.stories);
+			showsprint.storyspan = showsprint.sprintDays.length + 5;
+			showsprint.shortDates = utils.formatDateShort(showsprint.sprintDays);
 
-			var numDays = $scope.sprintDays.length;
+			showsprint.edit = function(id) {
+				angular.element("#tablerow-" + id + " .cellLabel").hide();
+				angular.element("#tablerow-" + id + " .cellEdit").show();
+			};
 
-			$scope.startDate = utils.formatDate($scope.sprintDays[0]);
-			$scope.endDate = utils.formatDate($scope.sprintDays[numDays - 1]);
+			showsprint.save = function(id) {
+				var deepenedStories = {stories : utils.deepenStories(showsprint.sprintItems)};
+
+				$http.put('teams/' + teamId + '/sprints/' + sprintId + '/tasks', deepenedStories).success(function(){
+					angular.element("#tablerow-" + id + " .cellLabel").show();
+					angular.element("#tablerow-" + id + " .cellEdit").hide();
+				})
+				.error(function() {
+					console.log('error occurred in put');
+				});
+			};
 		});
 	});
 });
