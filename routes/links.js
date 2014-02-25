@@ -41,7 +41,53 @@ var sprints = [{
 	name : "Sprint 102",
 	teamId : "104",
 	dates : [new Date(Date.UTC(2014, 1, 12)).getTime(), new Date(Date.UTC(2014, 0, 31)).getTime(), new Date(Date.UTC(2014, 1, 3)).getTime(), new Date(Date.UTC(2014, 1, 4)).getTime(), new Date(Date.UTC(2014, 1, 5)).getTime(), new Date(Date.UTC(2014, 1, 6)).getTime(),
-	new Date(Date.UTC(2014, 1, 7)).getTime(), new Date(Date.UTC(2014, 1, 10)).getTime(), new Date(Date.UTC(2014, 1, 11)).getTime()]
+	new Date(Date.UTC(2014, 1, 7)).getTime(), new Date(Date.UTC(2014, 1, 10)).getTime(), new Date(Date.UTC(2014, 1, 11)).getTime()],
+	stories : [{
+		id : "300",
+		name : "US149112: As a user, I would like to have my CUIC tabs rendered properly in IE 11 Edge mode.",
+		tasks : [{
+			index : "0",
+			id : "400",
+			name : "Analyze and figure out root cause",
+			status : "In Progress",
+			by : "Vishal",
+			planned : "10",
+			remaining : ["10", "5"]
+		},{
+			index : "1",
+			id : "401",
+			name : "Fix the issue and write test cases",
+			status : "New",
+			planned : "6",
+			remaining : []			
+		}]
+	},{
+		id : "301",
+		name : "US153216: As a user, I should be able to add and run all widgets.",
+		tasks : [{
+			index : "0",
+			id : "500",
+			name : "Find out which widgets are causing issues",
+			status : "Completed",
+			by : "Sunil",
+			planned : "8",
+			remaining : []
+		},{
+			index : "1",
+			id : "501",
+			name : "Fix the widget and add selenium test case",
+			status : "New",
+			planned : "12",
+			remaining : []			
+		},{
+			index : "2",
+			id : "502",
+			name : "Code review",
+			status : "New",
+			planned : "3",
+			remaining : []			
+		}]
+	}]
 }, {
 	id : "201",
 	name : "Sprint 103",
@@ -113,7 +159,6 @@ exports.addSprint = function(req, res) {
 };
 
 exports.updateSprint = function(req, res) {
-	var id = req.params.sprintId;
 	var found = false;
 	for(var i in sprints) {
 		if(req.params.sprintId == sprints[i].id) {
@@ -130,6 +175,25 @@ exports.updateSprint = function(req, res) {
 	if(!found) {
 		res.status(404).send({});
 	}
+};
+
+exports.updateSprintTasks = function(req, res) {
+	var found = false;
+
+	for(var i in sprints) {
+		if(req.params.sprintId == sprints[i].id) {
+			sprints[i].stories = req.body.stories;
+
+			res.status(200).send();
+
+			found = true;
+			break;
+		}
+	}
+
+	if(!found) {
+		res.status(404).send({});
+	}	
 };
 
 exports.deleteSprint = function(req, res) {

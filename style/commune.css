@@ -13,7 +13,7 @@
 }
 
 .rowActions {
-	opacity: 0.3;
+	opacity: 0.5;
 }
 
 .rowActions:hover {
@@ -29,4 +29,52 @@
 
 .cellInputFormData {
 	width: 60%;
+}
+
+.cellIndexAndAction {
+	width: 50px;
+	overflow: hidden;
+	text-align: center;
+}
+
+.cellTaskRemaining {
+	width: 50px;
+	overflow: hidden;
+	text-align: center;
+	border-right: 1px solid #eeddff;
+	border-left: 1px solid #eeddff;
+}
+
+.cellPlanned {
+	width: 80px;
+	overflow: hidden;
+	text-align: center;
+}
+
+.cellByAndStatus {
+	width: 100px;
+	overflow: hidden;
+	text-align: center;
+}
+
+.cellForm {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 7px;
+	padding-right: 7px;
+	border: 1px solid;
+	border-radius: 5px;
+	height: 26px;
+}
+
+.cellLabel {
+}
+
+.cellEdit {
+	display: none;
+}
+
+.storyCellH4 {
+	margin-top: 10px;
+	margin-bottom: 10px;
 }

@@ -21,6 +21,7 @@ app.get('/commune/teams/:teamId', links.team);
 app.get('/commune/teams/:teamId/sprints', links.sprints);
 app.get('/commune/teams/:teamId/sprints/:sprintId', links.sprint);
 app.put('/commune/teams/:teamId/sprints/:sprintId', links.updateSprint);
+app.put('/commune/teams/:teamId/sprints/:sprintId/tasks', links.updateSprintTasks);
 app.delete('/commune/teams/:teamId/sprints/:sprintId', links.deleteSprint);
 app.post('/commune/teams/:teamId/sprints', links.addSprint);
 

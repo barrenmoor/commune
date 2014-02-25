@@ -22,7 +22,7 @@
 			<td>{{sprint.startDate}}</td>
 			<td>{{sprint.endDate}}</td>
 			<td>
-				<a href="#/team/{{teamId}}/editsprint/{{sprint.id}}"><span class="glyphicon glyphicon-pencil rowActions"></span></a>
+				<span class="glyphicon glyphicon-edit rowActions" ng-click="edit(teamId, sprint.id)"></span>
 				<span>&nbsp;&nbsp;</span>
 				<span class="glyphicon glyphicon-trash rowActions" data-toggle="modal" data-target="#warning" ng-click="confirmDelete(teamId, sprint.id)"></span>
 			</td>
