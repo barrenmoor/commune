@@ -71,9 +71,10 @@ angular.module('commune', ['ngRoute', 'components'])
 				});
 			};
 
-			$scope.confirmDelete = function(teamId, sprintId) {
+			$scope.confirmDelete = function(teamId, sprintId, sprintName) {
 				$scope.delete.teamId = teamId;
 				$scope.delete.sprintId = sprintId;
+				$scope.delete.sprintName = sprintName;
 			};
 
 			$scope.edit = function(teamId, sprintId) {
@@ -141,7 +142,7 @@ angular.module('commune', ['ngRoute', 'components'])
 	});
 })
 
-.controller('ShowSprintCtrl', function($scope, $http, $routeParams) {
+.controller('ShowSprintCtrl', function($scope, $http, $routeParams, $route, $timeout) {
 	var teamId = $routeParams.teamId;
 	var sprintId = $routeParams.sprintId;
 
@@ -156,12 +157,13 @@ angular.module('commune', ['ngRoute', 'components'])
 
 		$http.get('teams/' + teamId + '/sprints/' + sprintId).success(function(sprint) {
 			var utils = new CommuneUtils();
+			var storyTransformer = new StoryTransformer();
 
 			showsprint.title = sprint.name;
 			showsprint.sprintDays = utils.convertToDate(sprint.dates).sort(utils.date_sort_asc);
 			showsprint.startDate = utils.formatDateLong(showsprint.sprintDays[0]);
 			showsprint.endDate = utils.formatDateLong(showsprint.sprintDays[showsprint.sprintDays.length - 1]);
-			showsprint.sprintItems = utils.flattenStories(sprint.stories);
+			showsprint.sprintItems = storyTransformer.flattenStories(sprint.stories);
 			showsprint.storyspan = showsprint.sprintDays.length + 5;
 			showsprint.shortDates = utils.formatDateShort(showsprint.sprintDays);
 
@@ -171,7 +173,7 @@ angular.module('commune', ['ngRoute', 'components'])
 			};
 
 			showsprint.save = function(id) {
-				var deepenedStories = {stories : utils.deepenStories(showsprint.sprintItems)};
+				var deepenedStories = {stories : storyTransformer.deepenStories(showsprint.sprintItems)};
 
 				$http.put('teams/' + teamId + '/sprints/' + sprintId + '/tasks', deepenedStories).success(function(){
 					angular.element("#tablerow-" + id + " .cellLabel").show();
@@ -180,6 +182,101 @@ angular.module('commune', ['ngRoute', 'components'])
 				.error(function() {
 					console.log('error occurred in put');
 				});
+			};
+
+			showsprint.addStory = function() {
+				var id = utils.makeId();
+				showsprint.sprintItems.push({type : "STORY", id : id});
+
+				$timeout(function() {
+					showsprint.edit(id);
+				}, 100);
+			};
+
+			showsprint.addTask = function(id) {
+				var findTaskIndexAndPosition = function(startIndex) {
+					var taskIndex = 0;
+					while(startIndex < showsprint.sprintItems.length) {
+						if(showsprint.sprintItems[startIndex].type == "STORY") {
+							return {index : taskIndex, position : startIndex};
+						}
+						taskIndex++;
+						startIndex++;
+					}
+					return {index : taskIndex, position : startIndex};
+				};
+
+				var taskId = utils.makeId();
+				var taskIndexAndPosition;
+
+				for(var i in showsprint.sprintItems) {
+					if(id == showsprint.sprintItems[i].id) {
+						taskIndexAndPosition = findTaskIndexAndPosition(parseInt(i) + 1);
+					}
+				}
+
+				var task = {
+					index : taskIndexAndPosition.index,
+					type : "TASK",
+					id : taskId,
+					status : "New"
+				};
+
+				showsprint.sprintItems.splice(taskIndexAndPosition.position, 0, task);
+
+				$timeout(function() {
+					showsprint.edit(taskId);
+				}, 100);
+			};
+
+			showsprint.delete = function() {
+				var findTaskCount = function(startIndex) {
+					var taskCount = 0;
+					while(startIndex < showsprint.sprintItems.length && showsprint.sprintItems[startIndex++].type != "STORY") {
+						taskCount++;
+					}
+					return taskCount;
+				};
+
+				var updateTaskIndices = function(startIndex) {
+					while(startIndex < showsprint.sprintItems.length && showsprint.sprintItems[startIndex].type != "STORY") {
+						showsprint.sprintItems[startIndex].index--;
+						startIndex++;
+					}
+				};
+
+				var index = -1;
+				for(var i in showsprint.sprintItems) {
+					if(showsprint.delete.itemId == showsprint.sprintItems[i].id) {
+						index = parseInt(i);
+						break;
+					}
+				}
+
+				if(index >= 0) {
+					var subItemCount = showsprint.sprintItems[index].type == "STORY" ? findTaskCount(index + 1) : 0;
+					updateTaskIndices(index + 1);
+					showsprint.sprintItems.splice(index, subItemCount + 1);
+
+					var deepenedStories = {stories : storyTransformer.deepenStories(showsprint.sprintItems)};
+
+					$http.put('teams/' + teamId + '/sprints/' + sprintId + '/tasks', deepenedStories).success(function(){
+						//do nothing
+					})
+					.error(function() {
+						console.log('error occurred in put');
+					});
+				}
+			};
+
+			showsprint.confirmDelete = function(id) {
+				for(var i in showsprint.sprintItems) {
+					if(id == showsprint.sprintItems[i].id) {
+						showsprint.delete.itemType = showsprint.sprintItems[i].type.toLowerCase();
+						showsprint.delete.itemName = showsprint.sprintItems[i].name;
+						showsprint.delete.itemId = id;
+					}
+				}
 			};
 		});
 	});

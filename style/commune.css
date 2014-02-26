@@ -4,12 +4,13 @@
 
 .mainFrameDiv {
 	width: 80%;
-	padding-top: 100px;
+	padding-top: 80px;
 	margin: 0 auto;
 }
 
 .tableBottomDiv {
 	text-align: right;
+	margin-bottom: 100px;
 }
 
 .rowActions {
@@ -31,18 +32,16 @@
 	width: 60%;
 }
 
-.cellIndexAndAction {
-	width: 50px;
+.cellAction {
+	width: 90px;
 	overflow: hidden;
-	text-align: center;
+	text-align: center;	
 }
 
 .cellTaskRemaining {
 	width: 50px;
 	overflow: hidden;
 	text-align: center;
-	border-right: 1px solid #eeddff;
-	border-left: 1px solid #eeddff;
 }
 
 .cellPlanned {
@@ -74,7 +73,7 @@
 	display: none;
 }
 
-.storyCellH4 {
+.storyRowGlyph {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
