@@ -74,6 +74,10 @@
 	display: none;
 }
 
+.glyphEdit {
+	top: 6px !important;
+}
+
 .storyRowGlyph {
 	margin-top: 10px;
 	margin-bottom: 10px;

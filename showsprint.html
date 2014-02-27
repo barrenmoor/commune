@@ -35,7 +35,7 @@
 					<input type="text" class="form-control cellForm storyRowGlyph" ng-model="sprintItem.name"/>
 				</td>
 				<td ng-if="sprintItem.type == 'STORY'" class="cellAction cellEdit">
-					<span class="glyphicon glyphicon-floppy-save rowActions storyRowGlyph" ng-click="showsprint.save(sprintItem.id)"></span>
+					<span class="glyphicon glyphicon-floppy-save rowActions storyRowGlyph glyphEdit" ng-click="showsprint.save(sprintItem.id)"></span>
 				</td>
 
 				<!-- If the item is a task -->
@@ -74,7 +74,7 @@
 					<input type="text" class="form-control cellForm" ng-model="sprintItem.remaining[$index]"/>
 				</td>
 				<td ng-if="sprintItem.type == 'TASK'" class="cellAction cellEdit">
-					<span class="glyphicon glyphicon-floppy-save rowActions" ng-click="showsprint.save(sprintItem.id)"></span>
+					<span class="glyphicon glyphicon-floppy-save rowActions  glyphEdit" ng-click="showsprint.save(sprintItem.id)"></span>
 				</td>
 			</tr>
 		</table>
