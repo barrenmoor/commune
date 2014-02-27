@@ -8,14 +8,17 @@
 		</div>
 		<table class="table table-striped table-bordered">
 			<tr>
-				<th class="cellTaskRemaining"><h5><span class="text-center">#</span></h5></th>
-				<th class="text-center"><h5>Task</h5></th>
-				<th class="cellByAndStatus"><h5><span class="text-center">Status</span></h5></th>
-				<th class="cellByAndStatus"><h5><span class="text-center">By</span></h5></th>
-				<th class="cellPlanned"><h5><span class="text-center">Planned</span></h5></th>
-				<th ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining"><h5><span class="text-center">{{shortDate}}</span></h5></th>
-				<th class="cellAction">&nbsp;</th>
+				<th rowspan="2" class="cellTaskRemaining titleRow"><h5><span class="text-center">#</span></h5></th>
+				<th rowspan="2" class="text-center titleRow"><h5>Task</h5></th>
+				<th rowspan="2" class="cellByAndStatus titleRow"><h5><span class="text-center">Status</span></h5></th>
+				<th rowspan="2" class="cellByAndStatus titleRow"><h5><span class="text-center">By</span></h5></th>
+				<th rowspan="2" class="cellPlanned titleRow"><h5><span class="text-center">Planned</span></h5></th>
+				<th ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining titleRow"><h5><span class="text-center">{{shortDate}}</span></h5></th>
+				<th rowspan="2" class="cellAction titleRow">&nbsp;</th>
 			</tr>
+			<tr>
+				<th ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining subtitleRow"><input type="checkbox" value=""/></th>
+			</tr>			
 			<tr ng-repeat="sprintItem in showsprint.sprintItems" id="tablerow-{{sprintItem.id}}">
 				<!-- If the item is a story -->
 				<td ng-if="sprintItem.type == 'STORY'" colspan="{{showsprint.storyspan}}" class="cellLabel"><h5>{{sprintItem.name}}</h5></td>

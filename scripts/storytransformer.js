@@ -29,6 +29,20 @@ var StoryTransformer = function () {
 			return flattened;
 		},
 
+		totalPlanned : function(stories) {
+			var total = 0;
+			for(var i in stories) {
+				if(stories[i].type == "STORY") {
+					continue;
+				} else {
+					if(stories[i].planned) {
+						total += parseInt(stories[i].planned);
+					}
+				}
+			}
+			return total;
+		},
+
 		deepenStories : function(flattened) {
 			var deepened = [];
 
