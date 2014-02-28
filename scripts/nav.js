@@ -186,6 +186,10 @@ angular.module('commune', ['ngRoute', 'components'])
 				});
 			};
 
+			showsprint.cancel = function() {
+				$route.reload();
+			}
+
 			showsprint.addStory = function() {
 				var id = utils.makeId();
 				showsprint.sprintItems.push({type : "STORY", id : id});
