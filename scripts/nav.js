@@ -169,6 +169,11 @@ angular.module('commune', ['ngRoute', 'components'])
 			showsprint.totalPlanned = storyTransformer.totalPlanned(showsprint.sprintItems);
 
 			showsprint.edit = function(id) {
+				var index = utils.findById(showsprint.sprintItems, id);
+				if(index != -1) {
+					showsprint.edit[id] = angular.copy(showsprint.sprintItems[index]);
+				}
+
 				angular.element("#tablerow-" + id + " .cellLabel").hide();
 				angular.element("#tablerow-" + id + " .cellEdit").show();
 			};
@@ -186,8 +191,14 @@ angular.module('commune', ['ngRoute', 'components'])
 				});
 			};
 
-			showsprint.cancel = function() {
-				$route.reload();
+			showsprint.cancel = function(id) {
+				var index = utils.findById(showsprint.sprintItems, id);
+				if(index != -1) {
+					showsprint.sprintItems[index] = showsprint.edit[id];
+				}
+
+				angular.element("#tablerow-" + id + " .cellEdit").hide();
+				angular.element("#tablerow-" + id + " .cellLabel").show();
 			}
 
 			showsprint.addStory = function() {

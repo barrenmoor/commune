@@ -2,87 +2,91 @@
 	<navbar selectedTeam="{{showsprint.selectedTeam}}" href="#/team/{{showsprint.teamId}}"/>
 </div>
 <div class="mainFrameDiv">
-	<div class="panel panel-default">
-		<div class="panel-heading"><p><h4>{{showsprint.title}}</h4>{{showsprint.startDate}} - {{showsprint.endDate}}</p></div>
-		<div class="panel-body">
-		</div>
-		<table class="table table-striped table-bordered">
-			<tr>
-				<th rowspan="2" class="cellTaskRemaining titleRow"><h5><span class="text-center">#</span></h5></th>
-				<th rowspan="2" class="text-center titleRow"><h5>Task</h5></th>
-				<th rowspan="2" class="cellByAndStatus titleRow"><h5><span class="text-center">Status</span></h5></th>
-				<th rowspan="2" class="cellByAndStatus titleRow"><h5><span class="text-center">By</span></h5></th>
-				<th rowspan="2" class="cellPlanned titleRow"><h5><span class="text-center">Planned</span></h5></th>
-				<th ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining titleRow"><h5><span class="text-center">{{shortDate}}</span></h5></th>
-				<th rowspan="2" class="cellAction titleRow">&nbsp;</th>
-			</tr>
-			<tr>
-				<th ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining subtitleRow"><input type="checkbox" value=""/></th>
-			</tr>			
-			<tr ng-repeat="sprintItem in showsprint.sprintItems" id="tablerow-{{sprintItem.id}}">
-				<!-- If the item is a story -->
-				<td ng-if="sprintItem.type == 'STORY'" colspan="{{showsprint.storyspan}}" class="cellLabel"><h5>{{sprintItem.name}}</h5></td>
-				<td ng-if="sprintItem.type == 'STORY'" class="cellAction cellLabel">
-					<span class="glyphicon glyphicon-edit rowActions storyRowGlyph" ng-click="showsprint.edit(sprintItem.id)"></span>
-					<span>&nbsp;</span>
-					<span class="glyphicon glyphicon-trash rowActions storyRowGlyph" data-toggle="modal" data-target="#warning" ng-click="showsprint.confirmDelete(sprintItem.id)"></span>
-					<span>&nbsp;</span>
-					<span class="glyphicon glyphicon-plus rowActions storyRowGlyph" ng-click="showsprint.addTask(sprintItem.id)"></span>
-				</td>
+	<table class="chartTable">
+		<tr class="panel panel-default">
+			<td class="panel-heading chartTitle"><p><h4>{{showsprint.title}}</h4>{{showsprint.startDate}} - {{showsprint.endDate}}</p></td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+	<table class="table table-striped table-bordered">
+		<tr>
+			<th rowspan="2" class="cellTaskRemaining titleRow"><h5><span class="text-center">#</span></h5></th>
+			<th rowspan="2" class="text-center titleRow"><h5>Task</h5></th>
+			<th rowspan="2" class="cellByAndStatus titleRow"><h5><span class="text-center">Status</span></h5></th>
+			<th rowspan="2" class="cellByAndStatus titleRow"><h5><span class="text-center">By</span></h5></th>
+			<th rowspan="2" class="cellPlanned titleRow"><h5><span class="text-center">Planned</span></h5></th>
+			<th ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining titleRow"><h5><span class="text-center">{{shortDate}}</span></h5></th>
+			<th rowspan="2" class="cellAction titleRow">&nbsp;</th>
+		</tr>
+		<tr>
+			<th ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining subtitleRow"><input type="checkbox" value=""/></th>
+		</tr>
+		<tr ng-if="showsprint.sprintItems.length == 0">
+			<td class="emptyItemRow cellLabel" colspan="{{showsprint.storyspan + 1}}"><h5>No stories yet !</h5></td>
+		</tr>
+		<tr ng-repeat="sprintItem in showsprint.sprintItems" id="tablerow-{{sprintItem.id}}">
+			<!-- If the item is a story -->
+			<td ng-if="sprintItem.type == 'STORY'" colspan="{{showsprint.storyspan}}" class="cellLabel"><h5>{{sprintItem.name}}</h5></td>
+			<td ng-if="sprintItem.type == 'STORY'" class="cellAction cellLabel">
+				<span class="glyphicon glyphicon-edit rowActions storyRowGlyph" ng-click="showsprint.edit(sprintItem.id)"></span>
+				<span>&nbsp;</span>
+				<span class="glyphicon glyphicon-trash rowActions storyRowGlyph" data-toggle="modal" data-target="#warning" ng-click="showsprint.confirmDelete(sprintItem.id)"></span>
+				<span>&nbsp;</span>
+				<span class="glyphicon glyphicon-plus rowActions storyRowGlyph" ng-click="showsprint.addTask(sprintItem.id)"></span>
+			</td>
 
-				<!-- If the item is a story, hide all its controls initially -->
-				<td ng-if="sprintItem.type == 'STORY'" colspan="{{showsprint.storyspan}}" class="cellEdit">
-					<input type="text" class="form-control cellForm storyRowGlyph" ng-model="sprintItem.name"/>
-				</td>
-				<td ng-if="sprintItem.type == 'STORY'" class="cellAction cellEdit">
-					<span class="glyphicon glyphicon-floppy-save rowActions storyRowGlyph glyphEdit" ng-click="showsprint.save(sprintItem.id)"></span>
-					<span>&nbsp;</span>
-					<span class="glyphicon glyphicon-remove rowActions storyRowGlyph glyphEdit" ng-click="showsprint.cancel()"></span>
-				</td>
+			<!-- If the item is a story, hide all its controls initially -->
+			<td ng-if="sprintItem.type == 'STORY'" colspan="{{showsprint.storyspan}}" class="cellEdit">
+				<input type="text" class="form-control cellForm storyRowGlyph" ng-model="sprintItem.name"/>
+			</td>
+			<td ng-if="sprintItem.type == 'STORY'" class="cellAction cellEdit">
+				<span class="glyphicon glyphicon-floppy-save rowActions storyRowGlyph glyphEdit" ng-click="showsprint.save(sprintItem.id)"></span>
+				<span>&nbsp;</span>
+				<span class="glyphicon glyphicon-remove rowActions storyRowGlyph glyphEdit" ng-click="showsprint.cancel(sprintItem.id)"></span>
+			</td>
 
-				<!-- If the item is a task -->
-				<td ng-if="sprintItem.type == 'TASK'" class="cellTaskRemaining cellLabel">{{sprintItem.index + 1}}</td>
-				<td ng-if="sprintItem.type == 'TASK'" class="cellLabel">{{sprintItem.name}}</td>
-				<td ng-if="sprintItem.type == 'TASK'" class="cellByAndStatus cellLabel">{{sprintItem.status}}</td>
-				<td ng-if="sprintItem.type == 'TASK'" class="cellByAndStatus cellLabel">{{sprintItem.by}}</td>
-				<td ng-if="sprintItem.type == 'TASK'" class="cellPlanned cellLabel">{{sprintItem.planned}}</td>
-				<td ng-if="sprintItem.type == 'TASK'" ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining cellLabel">{{sprintItem.remaining[$index]}}</td>
-				<td ng-if="sprintItem.type == 'TASK'" class="cellAction cellLabel">
-					<span class="glyphicon glyphicon-edit rowActions" ng-click="showsprint.edit(sprintItem.id)"></span>
-					<span>&nbsp;</span>
-					<span class="glyphicon glyphicon-trash rowActions" data-toggle="modal" data-target="#warning" ng-click="showsprint.confirmDelete(sprintItem.id)"></span>
-				</td>
+			<!-- If the item is a task -->
+			<td ng-if="sprintItem.type == 'TASK'" class="cellTaskRemaining cellLabel">{{sprintItem.index + 1}}</td>
+			<td ng-if="sprintItem.type == 'TASK'" class="cellLabel">{{sprintItem.name}}</td>
+			<td ng-if="sprintItem.type == 'TASK'" class="cellByAndStatus cellLabel">{{sprintItem.status}}</td>
+			<td ng-if="sprintItem.type == 'TASK'" class="cellByAndStatus cellLabel">{{sprintItem.by}}</td>
+			<td ng-if="sprintItem.type == 'TASK'" class="cellPlanned cellLabel">{{sprintItem.planned}}</td>
+			<td ng-if="sprintItem.type == 'TASK'" ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining cellLabel">{{sprintItem.remaining[$index]}}</td>
+			<td ng-if="sprintItem.type == 'TASK'" class="cellAction cellLabel">
+				<span class="glyphicon glyphicon-edit rowActions" ng-click="showsprint.edit(sprintItem.id)"></span>
+				<span>&nbsp;</span>
+				<span class="glyphicon glyphicon-trash rowActions" data-toggle="modal" data-target="#warning" ng-click="showsprint.confirmDelete(sprintItem.id)"></span>
+			</td>
 
-				<!-- If the item is a task, hide all its controls initially -->
-				<td ng-if="sprintItem.type == 'TASK'" class="cellTaskRemaining cellEdit">{{sprintItem.index + 1}}</td>
-				<td ng-if="sprintItem.type == 'TASK'" class="cellEdit">
-					<input type="text" class="form-control cellForm" ng-model="sprintItem.name"/>
-				</td>
-				<td ng-if="sprintItem.type == 'TASK'" class="cellByAndStatus cellEdit">
-					<select class="form-control cellForm" ng-model="sprintItem.status">
-						<option ng-repeat="status in showsprint.statuses">{{status}}</option>
-					</select>
-				</td>
-				<td ng-if="sprintItem.type == 'TASK'" class="cellByAndStatus cellEdit">
-					<select class="form-control cellForm" ng-model="sprintItem.by">
-						<option></option>
-						<option ng-repeat="member in showsprint.members">{{member.name}}</option>
-					</select>
-				</td>
-				<td ng-if="sprintItem.type == 'TASK'" class="cellPlanned cellEdit">
-					<input type="text" class="form-control cellForm" ng-model="sprintItem.planned"/>
-				</td>
-				<td ng-if="sprintItem.type == 'TASK'" ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining cellEdit">
-					<input type="text" class="form-control cellForm" ng-model="sprintItem.remaining[$index]"/>
-				</td>
-				<td ng-if="sprintItem.type == 'TASK'" class="cellAction cellEdit">
-					<span class="glyphicon glyphicon-floppy-save rowActions  glyphEdit" ng-click="showsprint.save(sprintItem.id)"></span>
-					<span>&nbsp;</span>
-					<span class="glyphicon glyphicon-remove rowActions  glyphEdit" ng-click="showsprint.cancel()"></span>
-				</td>
-			</tr>
-		</table>
-	</div>
+			<!-- If the item is a task, hide all its controls initially -->
+			<td ng-if="sprintItem.type == 'TASK'" class="cellTaskRemaining cellEdit">{{sprintItem.index + 1}}</td>
+			<td ng-if="sprintItem.type == 'TASK'" class="cellEdit">
+				<input type="text" class="form-control cellForm" ng-model="sprintItem.name"/>
+			</td>
+			<td ng-if="sprintItem.type == 'TASK'" class="cellByAndStatus cellEdit">
+				<select class="form-control cellForm" ng-model="sprintItem.status">
+					<option ng-repeat="status in showsprint.statuses">{{status}}</option>
+				</select>
+			</td>
+			<td ng-if="sprintItem.type == 'TASK'" class="cellByAndStatus cellEdit">
+				<select class="form-control cellForm" ng-model="sprintItem.by">
+					<option></option>
+					<option ng-repeat="member in showsprint.members">{{member.name}}</option>
+				</select>
+			</td>
+			<td ng-if="sprintItem.type == 'TASK'" class="cellPlanned cellEdit">
+				<input type="text" class="form-control cellForm" ng-model="sprintItem.planned"/>
+			</td>
+			<td ng-if="sprintItem.type == 'TASK'" ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining cellEdit">
+				<input type="text" class="form-control cellForm" ng-model="sprintItem.remaining[$index]"/>
+			</td>
+			<td ng-if="sprintItem.type == 'TASK'" class="cellAction cellEdit">
+				<span class="glyphicon glyphicon-floppy-save rowActions  glyphEdit" ng-click="showsprint.save(sprintItem.id)"></span>
+				<span>&nbsp;</span>
+				<span class="glyphicon glyphicon-remove rowActions  glyphEdit" ng-click="showsprint.cancel(sprintItem.id)"></span>
+			</td>
+		</tr>
+	</table>
 	<div class="tableBottomDiv">
 		<button type="button" class="btn btn-primary" ng-click="showsprint.addStory()"><span class="glyphicon glyphicon-plus"></span> Add Story</button>
 	</div>

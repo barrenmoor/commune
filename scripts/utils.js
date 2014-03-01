@@ -55,6 +55,15 @@ var CommuneUtils = function() {
 			}
 
 			return text;
+		},
+
+		findById : function(arr, id) {
+			for(var i in arr) {
+				if(id == arr[i].id) {
+					return i;
+				}
+			}
+			return -1;
 		}
 	};
 }
