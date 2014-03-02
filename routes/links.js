@@ -42,6 +42,7 @@ var sprints = [{
 	teamId : "104",
 	dates : [new Date(Date.UTC(2014, 1, 12)).getTime(), new Date(Date.UTC(2014, 0, 31)).getTime(), new Date(Date.UTC(2014, 1, 3)).getTime(), new Date(Date.UTC(2014, 1, 4)).getTime(), new Date(Date.UTC(2014, 1, 5)).getTime(), new Date(Date.UTC(2014, 1, 6)).getTime(),
 	new Date(Date.UTC(2014, 1, 7)).getTime(), new Date(Date.UTC(2014, 1, 10)).getTime(), new Date(Date.UTC(2014, 1, 11)).getTime()],
+	done : 5,
 	stories : [{
 		id : "300",
 		name : "US149112: As a user, I would like to have my CUIC tabs rendered properly in IE 11 Edge mode.",
@@ -87,6 +88,7 @@ var sprints = [{
 	id : "201",
 	name : "Sprint 103",
 	teamId : "104",
+	done : 0,
 	dates : [new Date(Date.UTC(2014, 1, 19)).getTime(), new Date(Date.UTC(2014, 1, 20)).getTime(), new Date(Date.UTC(2014, 1, 21)).getTime(), new Date(Date.UTC(2014, 1, 24)).getTime(), new Date(Date.UTC(2014, 1, 25)).getTime()]
 }];
 
@@ -157,8 +159,15 @@ exports.updateSprint = function(req, res) {
 	var found = false;
 	for(var i in sprints) {
 		if(req.params.sprintId == sprints[i].id) {
-			sprints[i].name = req.body.name;
-			sprints[i].dates = req.body.dates;
+			if(req.body.name) {
+				sprints[i].name = req.body.name;
+			}
+			if(req.body.dates) {
+				sprints[i].dates = req.body.dates;
+			}
+			if(req.body.done) {
+				sprints[i].done = req.body.done;
+			}
 
 			res.status(200).send();
 

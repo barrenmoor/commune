@@ -1,4 +1,22 @@
 var StoryTransformer = function () {
+	var getRemainingTotal = function(stories, day) {
+		if(!day) {
+			day = 0;
+		}
+
+		var total = 0;
+		for(var i in stories) {
+			if(stories[i].type == "STORY") {
+				continue;
+			} else {
+				if(stories[i].remaining[day]) {
+					total += parseInt(stories[i].remaining[day]);
+				}
+			}
+		}
+		return total;
+	};
+
 	return {
 		flattenStories : function(stories) {
 			var flattened = [];
@@ -26,24 +44,6 @@ var StoryTransformer = function () {
 				}
 			}
 			return flattened;
-		},
-
-		getRemainingTotal : function(stories, day) {
-			if(!day) {
-				day = 0;
-			}
-
-			var total = 0;
-			for(var i in stories) {
-				if(stories[i].type == "STORY") {
-					continue;
-				} else {
-					if(stories[i].remaining[day]) {
-						total += parseInt(stories[i].remaining[day]);
-					}
-				}
-			}
-			return total;
 		},
 
 		deepenStories : function(flattened) {
@@ -82,6 +82,57 @@ var StoryTransformer = function () {
 			}
 
 			return deepened;
+		},
+
+		getRemainingDone : function(done) {
+			var remainingdone = [];
+			for(var i = 0; i <= done; i++) {
+				remainingdone.push("checked");
+			}
+
+			return remainingdone;
+		},
+
+		getChartData : function(sprintDays, done, sprintItems) {
+			var ideal = {
+				key : "Ideal",
+				area : true,
+				color : "#7777ff"
+			};
+			var actual = {
+				key : "Actual",
+				color : "#000000"
+			};
+
+			var totalPlanned = getRemainingTotal(sprintItems, 0);
+			var values = [ ["", totalPlanned] ];
+
+			var numDays = sprintDays.length;
+			var dailyReduce = totalPlanned / numDays;
+
+			for(var i = 0; i < numDays; i++) {
+				values.push([sprintDays[i].getTime(), totalPlanned - ((i + 1) * dailyReduce)]);
+			}
+
+			ideal.values = values;
+
+			values = [ ["", totalPlanned] ];
+			for(var i = 0 ; i < done; i++) {
+				values.push([sprintDays[i].getTime(), getRemainingTotal(sprintItems, (i + 1))]);
+			}
+			actual.values = values;
+
+			return [ideal, actual];
+		},
+
+		copyValues : function(sprintItems, index) {
+			for(var i in sprintItems) {
+				if(sprintItems[i].type == "TASK") {
+					if(!sprintItems[i].remaining[index]) {
+						sprintItems[i].remaining[index] = sprintItems[i].remaining[index - 1];
+					}
+				}
+			}
 		}
 	};
 }

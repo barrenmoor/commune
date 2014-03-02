@@ -147,6 +147,7 @@ angular.module('commune', ['ngRoute', 'components'])
 	var sprintId = $routeParams.sprintId;
 
 	$http.get('teams/' + teamId).success(function(team) {
+		var chart;
 		var showsprint = {};
 		$scope.showsprint = showsprint;
 
@@ -161,11 +162,13 @@ angular.module('commune', ['ngRoute', 'components'])
 
 			showsprint.title = sprint.name;
 			showsprint.sprintDays = utils.convertToDate(sprint.dates).sort(utils.date_sort_asc);
+			showsprint.done = sprint.done;
 			showsprint.startDate = utils.formatDateLong(showsprint.sprintDays[0]);
 			showsprint.endDate = utils.formatDateLong(showsprint.sprintDays[showsprint.sprintDays.length - 1]);
 			showsprint.sprintItems = storyTransformer.flattenStories(sprint.stories);
 			showsprint.storyspan = showsprint.sprintDays.length + 5;
 			showsprint.shortDates = utils.formatDateShort(showsprint.sprintDays);
+			showsprint.remainingdone = storyTransformer.getRemainingDone(sprint.done);
 
 			showsprint.edit = function(id) {
 				var index = utils.findById(showsprint.sprintItems, id);
@@ -181,8 +184,11 @@ angular.module('commune', ['ngRoute', 'components'])
 				var deepenedStories = {stories : storyTransformer.deepenStories(showsprint.sprintItems)};
 
 				$http.put('teams/' + teamId + '/sprints/' + sprintId + '/tasks', deepenedStories).success(function(){
-					angular.element("#tablerow-" + id + " .cellLabel").show();
-					angular.element("#tablerow-" + id + " .cellEdit").hide();
+					if(id) {
+						angular.element("#tablerow-" + id + " .cellLabel").show();
+						angular.element("#tablerow-" + id + " .cellEdit").hide();
+						showsprint.updateChart();						
+					}
 				})
 				.error(function() {
 					console.log('error occurred in put');
@@ -277,7 +283,7 @@ angular.module('commune', ['ngRoute', 'components'])
 					var deepenedStories = {stories : storyTransformer.deepenStories(showsprint.sprintItems)};
 
 					$http.put('teams/' + teamId + '/sprints/' + sprintId + '/tasks', deepenedStories).success(function(){
-						//do nothing
+						showsprint.updateChart();
 					})
 					.error(function() {
 						console.log('error occurred in put');
@@ -295,9 +301,73 @@ angular.module('commune', ['ngRoute', 'components'])
 				}
 			};
 
-			showsprint.dayCheck = function(index) {
-				
+			showsprint.updateChart = function(index) {
+				var storyTransformer = new StoryTransformer();
+
+				if(index) {
+					if(showsprint.remainingdone[index] == "unchecked") {
+						showsprint.remainingdone = storyTransformer.getRemainingDone(index - 1);
+						showsprint.done = index - 1;
+
+					} else if(showsprint.remainingdone[index] == "checked") {
+						showsprint.remainingdone = storyTransformer.getRemainingDone(index);
+						showsprint.done = index;
+
+						storyTransformer.copyValues(showsprint.sprintItems, index);
+						showsprint.save();
+					}
+
+					$http.put('/commune/teams/' + teamId + '/sprints/' + sprintId, {done : showsprint.done}).success(function() {
+						//do nothing
+					})
+					.error(function() {
+						console.log('update sprint:done failed');
+					});
+				}
+
+				var chartData = storyTransformer.getChartData(showsprint.sprintDays, showsprint.done, showsprint.sprintItems);
+
+				if(!chart) {
+					chart = nv.addGraph(function() {
+						var chart = nv.models.lineChart()
+							.useInteractiveGuideline(true)
+							.margin({top: 5, right: 100, bottom: 50, left: 100})
+							.showLegend(true)
+							.showYAxis(true)
+							.showXAxis(true)
+							.x(function(d,i) { return i })
+							.y(function(d,i) {return d[1] });
+						;
+
+						chart.xAxis
+							.axisLabel('Sprint Days')
+							.tickFormat(function(d) {
+								if(chartData[0].values[d] && chartData[0].values[d][0] == "") {
+									return d3.time.format('');
+								}
+								var dx = chartData[0].values[d] && chartData[0].values[d][0] || 0;
+								return d3.time.format('%m/%d')(new Date(dx))
+							});
+
+						chart.yAxis //Chart y-axis settings
+							.axisLabel('Remaining')
+							.tickFormat(d3.format(',f'));
+
+						d3.select('#chart svg')
+							.datum(chartData)
+							.transition()
+							.duration(350)
+							.call(chart);
+
+						nv.utils.windowResize(chart.update); 
+						return chart;
+					});
+				} else {
+					chart.update();
+				}
 			};
+
+			showsprint.updateChart();
 		});
 	});
 });

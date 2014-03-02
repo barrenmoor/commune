@@ -5,7 +5,11 @@
 	<table class="chartTable">
 		<tr class="panel panel-default">
 			<td class="panel-heading chartTitle"><p><h4>{{showsprint.title}}</h4>{{showsprint.startDate}} - {{showsprint.endDate}}</p></td>
-			<td>&nbsp;</td>
+			<td class="chartCell">
+				<div id="chart">
+					<svg class="chartArea"/>
+				</div>
+			</td>
 		</tr>
 	</table>
 	<table class="table table-striped table-bordered">
@@ -20,7 +24,13 @@
 		</tr>
 		<tr>
 			<th ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining subtitleRow">
-				<input id="daycheck-{{$index + 1}}" ng-click="dayCheck($index + 1)" type="checkbox"/>
+				<input type="checkbox"
+						id="daycheck-{{$index + 1}}"
+						ng-if="$index <= showsprint.done"
+						ng-model="showsprint.remainingdone[$index + 1]"
+						ng-true-value="checked"
+						ng-false-value="unchecked"
+						ng-change="showsprint.updateChart($index + 1)"/>
 			</th>
 		</tr>
 		<tr ng-if="showsprint.sprintItems.length == 0">
@@ -39,7 +49,7 @@
 
 			<!-- If the item is a story, hide all its controls initially -->
 			<td ng-if="sprintItem.type == 'STORY'" colspan="{{showsprint.storyspan}}" class="cellEdit">
-				<input type="text" class="form-control cellForm storyRowGlyph" ng-model="sprintItem.name"/>
+				<input type="text" class="form-control cellForm storyRowGlyph" ng-model="sprintItem.name">
 			</td>
 			<td ng-if="sprintItem.type == 'STORY'" class="cellAction cellEdit">
 				<span class="glyphicon glyphicon-floppy-save rowActions storyRowGlyph glyphEdit" ng-click="showsprint.save(sprintItem.id)"></span>

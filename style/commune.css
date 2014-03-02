@@ -107,3 +107,7 @@
 .emptyItemRow {
 	text-align: center;
 }
+
+.chartArea {
+	height: 280px;
+}
