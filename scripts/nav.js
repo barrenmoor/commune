@@ -166,7 +166,6 @@ angular.module('commune', ['ngRoute', 'components'])
 			showsprint.sprintItems = storyTransformer.flattenStories(sprint.stories);
 			showsprint.storyspan = showsprint.sprintDays.length + 5;
 			showsprint.shortDates = utils.formatDateShort(showsprint.sprintDays);
-			showsprint.totalPlanned = storyTransformer.totalPlanned(showsprint.sprintItems);
 
 			showsprint.edit = function(id) {
 				var index = utils.findById(showsprint.sprintItems, id);
@@ -182,7 +181,6 @@ angular.module('commune', ['ngRoute', 'components'])
 				var deepenedStories = {stories : storyTransformer.deepenStories(showsprint.sprintItems)};
 
 				$http.put('teams/' + teamId + '/sprints/' + sprintId + '/tasks', deepenedStories).success(function(){
-					showsprint.totalPlanned = storyTransformer.totalPlanned(showsprint.sprintItems);
 					angular.element("#tablerow-" + id + " .cellLabel").show();
 					angular.element("#tablerow-" + id + " .cellEdit").hide();
 				})
@@ -236,7 +234,8 @@ angular.module('commune', ['ngRoute', 'components'])
 					index : taskIndexAndPosition.index,
 					type : "TASK",
 					id : taskId,
-					status : "New"
+					status : "New",
+					remaining : []
 				};
 
 				showsprint.sprintItems.splice(taskIndexAndPosition.position, 0, task);
@@ -278,7 +277,7 @@ angular.module('commune', ['ngRoute', 'components'])
 					var deepenedStories = {stories : storyTransformer.deepenStories(showsprint.sprintItems)};
 
 					$http.put('teams/' + teamId + '/sprints/' + sprintId + '/tasks', deepenedStories).success(function(){
-						showsprint.totalPlanned = storyTransformer.totalPlanned(showsprint.sprintItems);
+						//do nothing
 					})
 					.error(function() {
 						console.log('error occurred in put');
@@ -294,6 +293,10 @@ angular.module('commune', ['ngRoute', 'components'])
 						showsprint.delete.itemId = id;
 					}
 				}
+			};
+
+			showsprint.dayCheck = function(index) {
+				
 			};
 		});
 	});

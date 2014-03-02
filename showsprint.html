@@ -19,7 +19,9 @@
 			<th rowspan="2" class="cellAction titleRow">&nbsp;</th>
 		</tr>
 		<tr>
-			<th ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining subtitleRow"><input type="checkbox" value=""/></th>
+			<th ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining subtitleRow">
+				<input id="daycheck-{{$index + 1}}" ng-click="dayCheck($index + 1)" type="checkbox"/>
+			</th>
 		</tr>
 		<tr ng-if="showsprint.sprintItems.length == 0">
 			<td class="emptyItemRow cellLabel" colspan="{{showsprint.storyspan + 1}}"><h5>No stories yet !</h5></td>
@@ -50,8 +52,8 @@
 			<td ng-if="sprintItem.type == 'TASK'" class="cellLabel">{{sprintItem.name}}</td>
 			<td ng-if="sprintItem.type == 'TASK'" class="cellByAndStatus cellLabel">{{sprintItem.status}}</td>
 			<td ng-if="sprintItem.type == 'TASK'" class="cellByAndStatus cellLabel">{{sprintItem.by}}</td>
-			<td ng-if="sprintItem.type == 'TASK'" class="cellPlanned cellLabel">{{sprintItem.planned}}</td>
-			<td ng-if="sprintItem.type == 'TASK'" ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining cellLabel">{{sprintItem.remaining[$index]}}</td>
+			<td ng-if="sprintItem.type == 'TASK'" class="cellPlanned cellLabel">{{sprintItem.remaining[0]}}</td>
+			<td ng-if="sprintItem.type == 'TASK'" ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining cellLabel">{{sprintItem.remaining[$index + 1]}}</td>
 			<td ng-if="sprintItem.type == 'TASK'" class="cellAction cellLabel">
 				<span class="glyphicon glyphicon-edit rowActions" ng-click="showsprint.edit(sprintItem.id)"></span>
 				<span>&nbsp;</span>
@@ -75,10 +77,10 @@
 				</select>
 			</td>
 			<td ng-if="sprintItem.type == 'TASK'" class="cellPlanned cellEdit">
-				<input type="text" class="form-control cellForm" ng-model="sprintItem.planned"/>
+				<input type="text" class="form-control cellForm" ng-model="sprintItem.remaining[0]"/>
 			</td>
 			<td ng-if="sprintItem.type == 'TASK'" ng-repeat="shortDate in showsprint.shortDates" class="cellTaskRemaining cellEdit">
-				<input type="text" class="form-control cellForm" ng-model="sprintItem.remaining[$index]"/>
+				<input type="text" class="form-control cellForm" ng-model="sprintItem.remaining[$index + 1]"/>
 			</td>
 			<td ng-if="sprintItem.type == 'TASK'" class="cellAction cellEdit">
 				<span class="glyphicon glyphicon-floppy-save rowActions  glyphEdit" ng-click="showsprint.save(sprintItem.id)"></span>

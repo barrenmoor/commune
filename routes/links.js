@@ -51,15 +51,13 @@ var sprints = [{
 			name : "Analyze and figure out root cause",
 			status : "In Progress",
 			by : "Vishal",
-			planned : "10",
-			remaining : ["10", "5"]
+			remaining : ["10", "10", "5"]
 		},{
 			index : "1",
 			id : "401",
 			name : "Fix the issue and write test cases",
 			status : "New",
-			planned : "6",
-			remaining : []			
+			remaining : ["6"]			
 		}]
 	},{
 		id : "301",
@@ -70,22 +68,19 @@ var sprints = [{
 			name : "Find out which widgets are causing issues",
 			status : "Completed",
 			by : "Sunil",
-			planned : "8",
-			remaining : []
+			remaining : ["8"]
 		},{
 			index : "1",
 			id : "501",
 			name : "Fix the widget and add selenium test case",
 			status : "New",
-			planned : "12",
-			remaining : []			
+			remaining : ["12"]			
 		},{
 			index : "2",
 			id : "502",
 			name : "Code review",
 			status : "New",
-			planned : "3",
-			remaining : []			
+			remaining : ["3"]
 		}]
 	}]
 }, {

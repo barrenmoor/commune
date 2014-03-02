@@ -20,7 +20,6 @@ var StoryTransformer = function () {
 					taskItem.name = task.name;
 					taskItem.status = task.status;
 					taskItem.by = task.by;
-					taskItem.planned = task.planned;
 					taskItem.remaining = task.remaining;
 
 					flattened.push(taskItem);
@@ -29,14 +28,18 @@ var StoryTransformer = function () {
 			return flattened;
 		},
 
-		totalPlanned : function(stories) {
+		getRemainingTotal : function(stories, day) {
+			if(!day) {
+				day = 0;
+			}
+
 			var total = 0;
 			for(var i in stories) {
 				if(stories[i].type == "STORY") {
 					continue;
 				} else {
-					if(stories[i].planned) {
-						total += parseInt(stories[i].planned);
+					if(stories[i].remaining[day]) {
+						total += parseInt(stories[i].remaining[day]);
 					}
 				}
 			}
@@ -67,7 +70,6 @@ var StoryTransformer = function () {
 								name : flattened[j].name,
 								status : flattened[j].status,
 								by : flattened[j].by,
-								planned : flattened[j].planned,
 								remaining : flattened[j].remaining
 							};
 							story.tasks.push(task);
