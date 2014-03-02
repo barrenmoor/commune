@@ -42,7 +42,7 @@ var sprints = [{
 	teamId : "104",
 	dates : [new Date(Date.UTC(2014, 1, 12)).getTime(), new Date(Date.UTC(2014, 0, 31)).getTime(), new Date(Date.UTC(2014, 1, 3)).getTime(), new Date(Date.UTC(2014, 1, 4)).getTime(), new Date(Date.UTC(2014, 1, 5)).getTime(), new Date(Date.UTC(2014, 1, 6)).getTime(),
 	new Date(Date.UTC(2014, 1, 7)).getTime(), new Date(Date.UTC(2014, 1, 10)).getTime(), new Date(Date.UTC(2014, 1, 11)).getTime()],
-	done : 5,
+	done : 4,
 	stories : [{
 		id : "300",
 		name : "US149112: As a user, I would like to have my CUIC tabs rendered properly in IE 11 Edge mode.",
@@ -52,13 +52,15 @@ var sprints = [{
 			name : "Analyze and figure out root cause",
 			status : "In Progress",
 			by : "Vishal",
-			remaining : ["10", "10", "5"]
+			planned : "10",
+			remaining : ["10", "5", "5", "5"]
 		},{
 			index : "1",
 			id : "401",
 			name : "Fix the issue and write test cases",
 			status : "New",
-			remaining : ["6"]			
+			planned : "6",
+			remaining : ["6", "6", "2", "4"]	
 		}]
 	},{
 		id : "301",
@@ -69,19 +71,22 @@ var sprints = [{
 			name : "Find out which widgets are causing issues",
 			status : "Completed",
 			by : "Sunil",
-			remaining : ["8"]
+			planned : "8",
+			remaining : ["5", "0", "0", "0"]
 		},{
 			index : "1",
 			id : "501",
 			name : "Fix the widget and add selenium test case",
 			status : "New",
-			remaining : ["12"]			
+			planned : "12",
+			remaining : ["12", "12", "8", "8"]
 		},{
 			index : "2",
 			id : "502",
 			name : "Code review",
 			status : "New",
-			remaining : ["3"]
+			planned : "3",
+			remaining : ["3", "3", "3", "3"]
 		}]
 	}]
 }, {
@@ -147,7 +152,8 @@ exports.addSprint = function(req, res) {
 		id : makeId(),
 		name : req.body.name,
 		teamId : req.params.teamId,
-		dates : req.body.dates
+		dates : req.body.dates,
+		done : req.body.done
 	};
 
 	console.log(sprint);
@@ -165,8 +171,11 @@ exports.updateSprint = function(req, res) {
 			if(req.body.dates) {
 				sprints[i].dates = req.body.dates;
 			}
-			if(req.body.done) {
+			if(req.body.done >= 0) {
 				sprints[i].done = req.body.done;
+			}
+			if(req.body.stories) {
+				sprints[i].stories = req.body.stories;
 			}
 
 			res.status(200).send();

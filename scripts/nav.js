@@ -89,13 +89,20 @@ angular.module('commune', ['ngRoute', 'components'])
 	$http.get('teams/' + teamId).success(function(team) {
 		$scope.selectedTeam = team.name;
 		$scope.teamId = teamId;
+		$scope.action = "ADD";
 
 		$scope.save = function() {
 			$scope.sprintDays = $('.datePicker').datepicker('getUTCDates');
 
+			if(!$scope.title || $scope.title.length == 0 || $scope.sprintDays.length == 0) {
+				angular.element('#alert').show();
+				return;
+			}
+
 			var sprint = {
 				name : $scope.title,
-				dates : $scope.sprintDays
+				dates : $scope.sprintDays,
+				done : 0
 			};
 
 			$http.post('teams/' + teamId + '/sprints', sprint).success(function() {
@@ -111,6 +118,7 @@ angular.module('commune', ['ngRoute', 'components'])
 .controller('EditSprintCtrl', function($scope, $http, $routeParams, $location) {
 	var teamId = $routeParams.teamId;
 	var sprintId = $routeParams.sprintId;
+	$scope.action = "EDIT";
 
 	$http.get('teams/' + teamId).success(function(team) {
 		$scope.selectedTeam = team.name;
@@ -119,24 +127,41 @@ angular.module('commune', ['ngRoute', 'components'])
 		$http.get('teams/' + teamId + '/sprints/' + sprintId).success(function(sprint) {
 			var utils = new CommuneUtils();
 			$scope.title = sprint.name;
-
+			$scope.stories = sprint.stories;
+			$scope.done = sprint.done;
 			$scope.sprintDays = utils.convertToDate(sprint.dates);
 			$scope.sprintDays.sort(utils.date_sort_asc);
 
 			$scope.save = function() {
-				$scope.sprintDays = $('.datePicker').datepicker('getUTCDates');
-				var sprint = {
-					name : $scope.title,
-					dates : $scope.sprintDays
-				};
+				angular.element('#warning').on('hidden.bs.modal', function(e) {
+					var storyTransformer = new StoryTransformer();
+					
+					var newDates = $('.datePicker').datepicker('getUTCDates');
 
-				$http.put('teams/' + teamId + '/sprints/' + sprintId, sprint).success(function() {
-					$location.path('team/' + teamId);
-				})
-				.error(function() {
-					console.log('error occurred in put');
+					if(!$scope.title || $scope.title.length == 0 || newDates.length == 0) {
+						angular.element('#alert').show();
+						return;
+					}
+
+					newDates.sort(utils.date_sort_asc);
+					var updated = storyTransformer.getUpdatedStoriesAndDone($scope.sprintDays, newDates, $scope.done, $scope.stories);
+
+					$scope.sprintDays = newDates;
+
+					var sprint = {
+						name : $scope.title,
+						done : updated.done,
+						dates : $scope.sprintDays,
+						stories : updated.stories
+					};
+
+					$http.put('teams/' + teamId + '/sprints/' + sprintId, sprint).success(function() {
+						$location.path('team/' + teamId);
+					})
+					.error(function() {
+						console.log('error occurred in put');
+					});
 				});
-
 			};
 		});
 	});
@@ -168,7 +193,7 @@ angular.module('commune', ['ngRoute', 'components'])
 			showsprint.sprintItems = storyTransformer.flattenStories(sprint.stories);
 			showsprint.storyspan = showsprint.sprintDays.length + 5;
 			showsprint.shortDates = utils.formatDateShort(showsprint.sprintDays);
-			showsprint.remainingdone = storyTransformer.getRemainingDone(sprint.done);
+			showsprint.checkboxValues = storyTransformer.getCheckboxValues(sprint.done);
 
 			showsprint.edit = function(id) {
 				var index = utils.findById(showsprint.sprintItems, id);
@@ -304,14 +329,14 @@ angular.module('commune', ['ngRoute', 'components'])
 			showsprint.updateChart = function(index) {
 				var storyTransformer = new StoryTransformer();
 
-				if(index) {
-					if(showsprint.remainingdone[index] == "unchecked") {
-						showsprint.remainingdone = storyTransformer.getRemainingDone(index - 1);
-						showsprint.done = index - 1;
-
-					} else if(showsprint.remainingdone[index] == "checked") {
-						showsprint.remainingdone = storyTransformer.getRemainingDone(index);
+				if(index >= 0) {
+					if(showsprint.checkboxValues[index] == "unchecked") {
+						showsprint.checkboxValues = storyTransformer.getCheckboxValues(index);
 						showsprint.done = index;
+
+					} else if(showsprint.checkboxValues[index] == "checked") {
+						showsprint.checkboxValues = storyTransformer.getCheckboxValues(index + 1);
+						showsprint.done = index + 1;
 
 						storyTransformer.copyValues(showsprint.sprintItems, index);
 						showsprint.save();
