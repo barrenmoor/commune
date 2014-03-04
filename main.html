@@ -7,23 +7,17 @@
 			<td>
 				<div data-interval="4000" class="carousel slide" id="main-carousel">
 					<ol class="carousel-indicators">
-						<li data-slide-to="0" data-target="#main-carousel" class="active"></li>
-						<li data-slide-to="1" data-target="#main-carousel" class=""></li>
-						<li data-slide-to="2" data-target="#main-carousel" class=""></li>
-						<li data-slide-to="3" data-target="#main-carousel" class=""></li>
+						<li ng-repeat="team in teams" data-slide-to="{{$index}}" data-target="#main-carousel" class="{{$index == 0 ? 'active' : ''"></li>
 					</ol>
 					<div class="carousel-inner">
-						<div class="item active">
-							<img src="images/skydiving-01.png" class="homePageImage">
-						</div>
-						<div class="item">
-							<img src="images/pitstop-02.png" class="homePageImage">
-						</div>
-						<div class="item">
-							<img src="images/pitstop-01.png" class="homePageImage">
-						</div>
-						<div class="item">
-							<img src="images/skydiving-02.png" class="homePageImage">
+						<div ng-repeat="team in teams" class="item {{$index == 0 ? 'active' : ''}}">
+							<a class="imageAnchor" href="#/team/{{team.id}}">
+								<img src="{{team.image}}" class="homePageImage">
+								<div class="carousel-caption">
+									<h2>Team {{team.name}}</h2>
+									<p><span ng-repeat="member in team.members">{{member.name}}{{$last ? '' : ', '}}</span></p>
+								</div>
+							</a>
 						</div>
 					</div>
 					<a data-slide="prev" data-target="#main-carousel" class="left carousel-control guideMarks">

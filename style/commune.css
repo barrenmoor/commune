@@ -130,3 +130,8 @@
 .guideMarks {
 	cursor: pointer;
 }
+
+.imageAnchor {
+	color: #ffffff;
+	text-decoration: none;
+}

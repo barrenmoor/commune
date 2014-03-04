@@ -25,6 +25,12 @@ angular.module('commune', ['ngRoute', 'components'])
 })
 
 .controller('MainCtrl', function($scope, $http, $location, $routeParams){
+	$http.get('basic').success(function(basicData) {
+		$scope.brand = basicData.brand;
+		$http.get('teams').success(function(teamSummary) {
+			$scope.teams = teamSummary.teams;
+		});
+	});
 })
 
 .controller('TeamCtrl', function($scope, $http, $routeParams, $route, $location) {
