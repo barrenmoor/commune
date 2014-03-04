@@ -115,3 +115,18 @@
 .alertDiv {
 	display : none;
 }
+
+.homePageImage {
+	width: 1000px;
+	height: 600px;
+}
+
+.imageTable {
+	margin-top: 50px !important;
+	margin: 0 auto;
+	box-shadow: 10px 10px 10px #888888;
+}
+
+.guideMarks {
+	cursor: pointer;
+}
