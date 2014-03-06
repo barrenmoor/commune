@@ -348,7 +348,7 @@ angular.module('commune', ['ngRoute', 'components'])
 						showsprint.save();
 					}
 
-					$http.put('/commune/teams/' + teamId + '/sprints/' + sprintId, {done : showsprint.done}).success(function() {
+					$http.put('teams/' + teamId + '/sprints/' + sprintId, {done : showsprint.done}).success(function() {
 						//do nothing
 					})
 					.error(function() {
