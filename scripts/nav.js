@@ -1,4 +1,4 @@
-angular.module('commune', ['ngRoute', 'components'])
+angular.module('jive', ['ngRoute', 'components'])
 
 .config(function($routeProvider) {
 	$routeProvider
