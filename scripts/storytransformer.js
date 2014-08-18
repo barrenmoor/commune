@@ -189,18 +189,18 @@ var StoryTransformer = function () {
 			};
 
 			var totalPlanned = getRemainingTotal(sprintItems);
-			var values = [ ["", totalPlanned] ];
+			var values = [ [sprintDays[0].getTime(), totalPlanned] ];
 
 			var numDays = sprintDays.length;
 			var dailyReduce = totalPlanned / numDays;
 
-			for(var i = 0; i < numDays; i++) {
-				values.push([sprintDays[i].getTime(), totalPlanned - ((i + 1) * dailyReduce)]);
+			for(var i = 1; i < numDays; i++) {
+				values.push([sprintDays[i].getTime(), totalPlanned - (i * dailyReduce)]);
 			}
 
 			ideal.values = values;
 
-			values = [ ["", totalPlanned] ];
+			values = [];
 			for(var i = 0 ; i < done; i++) {
 				values.push([sprintDays[i].getTime(), getRemainingTotal(sprintItems, i)]);
 			}
