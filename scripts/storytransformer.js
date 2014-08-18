@@ -192,7 +192,7 @@ var StoryTransformer = function () {
 			var values = [ [sprintDays[0].getTime(), totalPlanned] ];
 
 			var numDays = sprintDays.length;
-			var dailyReduce = totalPlanned / numDays;
+			var dailyReduce = totalPlanned / (numDays - 1);
 
 			for(var i = 1; i < numDays; i++) {
 				values.push([sprintDays[i].getTime(), totalPlanned - (i * dailyReduce)]);
